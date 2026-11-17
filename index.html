@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Co Tuong - YouTube Player Test</title>
+<style>html,body{margin:0;background:#111;color:#fff;font:14px -apple-system,BlinkMacSystemFont,sans-serif}main{max-width:700px;margin:auto;padding:12px}#player{width:100%;aspect-ratio:16/9;min-height:200px;background:#000}#status{padding:12px;background:#292929;border-radius:8px;margin-top:12px;overflow-wrap:anywhere}a{color:#ffc857}</style>
+</head>
+<body><main>
+<h3>Kiểm tra YouTube nhúng - Cờ Tướng</h3>
+<div id="player"></div>
+<div id="status">Đang tải YouTube IFrame API…</div>
+<p>Nhấn Play trên video. Nếu có lỗi 152-4, hãy ghi lại mã lỗi và thử <a id="youtube" href="https://www.youtube.com/watch?v=Y2MIDcWEd7o">mở trên YouTube</a>.</p>
+<script>
+const params=new URLSearchParams(location.search);
+const raw=params.get('v')||'Y2MIDcWEd7o';
+const id=/^[A-Za-z0-9_-]{11}$/.test(raw)?raw:'Y2MIDcWEd7o';
+document.getElementById('youtube').href='https://www.youtube.com/watch?v='+encodeURIComponent(id);
+const status=document.getElementById('status');
+window.onYouTubeIframeAPIReady=function(){
+  new YT.Player('player',{width:'100%',height:'100%',videoId:id,
+    playerVars:{playsinline:1,controls:1,autoplay:0,rel:0,origin:location.origin},
+    events:{onReady:()=>status.textContent='Trình phát sẵn sàng. Nhấn Play để kiểm tra.',
+      onStateChange:e=>status.textContent='Trạng thái phát: '+e.data,
+      onError:e=>status.textContent='YouTube báo mã lỗi: '+e.data}
+  });
+};
+const script=document.createElement('script');
+script.src='https://www.youtube.com/iframe_api';
+script.onerror=()=>status.textContent='Không tải được YouTube IFrame API.';
+document.head.appendChild(script);
+</script></main></body></html>
